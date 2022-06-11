@@ -1,0 +1,18 @@
+action: backup
+storage:
+  client: file
+  options:
+    storage_path: "./backup"
+tunnel:
+  host: 192.168.100.16
+  bind_port: 3306
+  forward_port: 3306
+  port: 22
+  user: pi
+database:
+  client: pg
+  username: root
+  password: root
+  host: 127.0.0.1
+  port: 5432
+  name: posts

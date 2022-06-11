@@ -1,0 +1,22 @@
+image: golang:1.18-alpine
+
+before_script:
+  - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+
+run_script:
+  script:
+    - go build -o runner main.go
+    - ./runner -f $(echo $FILE_PATH)
+  when: manual
+  only:
+    refs:
+      - master
+  variables:
+    - DEFAULT_FILE_PATH=./config.yml
+    - FILE_PATH=DEFAULT_FILE_PATH
